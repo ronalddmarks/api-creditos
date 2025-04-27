@@ -1,13 +1,13 @@
 package com.ronald.creditos.service;
 
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.ronald.creditos.DTO.CreditoDTO;
 import com.ronald.creditos.model.Credito;
 import com.ronald.creditos.repository.CreditoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CreditoService {
@@ -16,16 +16,15 @@ public class CreditoService {
     private CreditoRepository creditoRepository;
 
     public CreditoDTO buscarCreditoPorNumero(String numeroCredito) {
-        Optional<Credito> creditoOptional = creditoRepository.findByNumeroCredito(numeroCredito);
+        Credito credito = creditoRepository.findByNumeroCredito(numeroCredito)
+                .orElseThrow(() -> new RuntimeException("Crédito não encontrado"));
 
-        if (creditoOptional.isPresent()) {
-            Credito credito = creditoOptional.get();
-            CreditoDTO dto = new CreditoDTO();
-            dto.setId(credito.getId());
-            dto.setNumeroCredito(credito.getNumeroCredito());
-            dto.setValorFaturado(credito.getValorFaturado());
-            return dto;
-        }
-        return null; // ou lançar uma Exception personalizada
+        return CreditoDTO.fromEntity(credito);
+    }
+
+    public List<CreditoDTO> buscarCreditosPorNumeroNfse(String numeroNfse) {
+        List<Credito> creditos = creditoRepository.findByNumeroNfse(numeroNfse);
+
+        return creditos.stream().map(CreditoDTO::fromEntity).collect(Collectors.toList());
     }
 }

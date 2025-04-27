@@ -1,6 +1,8 @@
 package com.ronald.creditos.controller;
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,5 +22,10 @@ public class CreditoController {
     @GetMapping("/credito/{numero}")
     public CreditoDTO buscarCredito(@PathVariable String numero) {
         return creditoService.buscarCreditoPorNumero(numero);
+    }
+    
+    @GetMapping("/{numeroNfse}")
+    public List<CreditoDTO> buscarCreditosPorNfse(@PathVariable String numeroNfse) {
+        return creditoService.buscarCreditosPorNumeroNfse(numeroNfse);
     }
 }
