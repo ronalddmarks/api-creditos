@@ -1,13 +1,15 @@
 package com.ronald.creditos.service;
 
-import com.ronald.creditos.DTO.CreditoDTO;
-import com.ronald.creditos.model.Credito;
-import com.ronald.creditos.repository.CreditoRepository;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import com.ronald.creditos.DTO.CreditoDTO;
+import com.ronald.creditos.exception.ResourceNotFoundException;
+import com.ronald.creditos.model.Credito;
+import com.ronald.creditos.repository.CreditoRepository;
 
 @Service
 public class CreditoService {
@@ -17,7 +19,7 @@ public class CreditoService {
 
     public CreditoDTO buscarCreditoPorNumero(String numeroCredito) {
         Credito credito = creditoRepository.findByNumeroCredito(numeroCredito)
-                .orElseThrow(() -> new RuntimeException("Crédito não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Crédito não encontrado"));
 
         return CreditoDTO.fromEntity(credito);
     }
