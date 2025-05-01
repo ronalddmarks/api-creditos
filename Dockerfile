@@ -1,13 +1,17 @@
 FROM openjdk:17-jdk-slim
 
-# Define o diretório de trabalho dentro do container
 WORKDIR /app
 
-# Copia o arquivo jar gerado para dentro do container
-COPY target/creditos-0.0.1-SNAPSHOT.jar app.jar
+# faz Build e gera o jar
+COPY pom.xml .
+COPY src ./src
+COPY mvnw .
+COPY .mvn .mvn     
 
-# Expõe a porta que o Spring Boot vai rodar
+RUN ./mvnw clean package -DskipTests
+
+COPY /target/creditos-0.0.1-SNAPSHOT.jar app.jar
+
 EXPOSE 8080
 
-# Comando para rodar a aplicação
 ENTRYPOINT ["java", "-jar", "app.jar"]
